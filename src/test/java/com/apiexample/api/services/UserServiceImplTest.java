@@ -1,5 +1,6 @@
 package com.apiexample.api.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
@@ -54,6 +55,8 @@ public class UserServiceImplTest {
         Assertions.assertEquals(User.class, response.getClass());
         Assertions.assertEquals(ID, response.getId());
         Assertions.assertEquals(NAME, response.getName());
+        Assertions.assertEquals(EMAIL, response.getEmail());
+        Assertions.assertEquals(PASSWORD, response.getPassword());
     }
 
     @Test
@@ -71,7 +74,15 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void findAll() {
+    void whenFindAllThenReturnListOfUsers() {
+        Mockito.when(repository.findAll()).thenReturn(List.of(user));
+
+        List<User> response = service.findAll();
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(1, response.size());
+        Assertions.assertEquals(User.class, response.get(0).getClass());
+        Assertions.assertEquals(ID, response.get(0).getId());
     }
 
     @Test
