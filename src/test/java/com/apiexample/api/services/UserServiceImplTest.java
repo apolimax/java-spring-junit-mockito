@@ -1,5 +1,7 @@
 package com.apiexample.api.services;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -86,7 +88,14 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void create() {
+    void whenCreateThenReturnSuccess() {
+        Mockito.when(repository.save(any())).thenReturn(user);
+
+        User response = service.create(userDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(response.getClass(), User.class);
+        Assertions.assertEquals(ID, response.getId());
     }
 
     @Test
