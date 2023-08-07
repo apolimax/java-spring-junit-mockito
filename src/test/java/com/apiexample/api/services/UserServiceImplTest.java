@@ -1,6 +1,7 @@
 package com.apiexample.api.services;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.apiexample.api.domain.User;
 import com.apiexample.api.domain.dto.UserDTO;
 import com.apiexample.api.repositories.UserRepository;
+import com.apiexample.api.services.exceptions.DataIntegrityViolationException;
 import com.apiexample.api.services.exceptions.ObjectNotFoundException;
 import com.apiexample.api.services.impl.UserServiceImpl;
 
@@ -96,6 +98,19 @@ public class UserServiceImplTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(response.getClass(), User.class);
         Assertions.assertEquals(ID, response.getId());
+    }
+
+    @Test
+    void whenCreateThenReturnDataIntegrityViolationException() {
+        Mockito.when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try {
+            optionalUser.get().setId(2);
+            service.create(userDTO);
+        } catch (Exception e) {
+            Assertions.assertEquals(DataIntegrityViolationException.class, e.getClass());
+        }
+
     }
 
     @Test
