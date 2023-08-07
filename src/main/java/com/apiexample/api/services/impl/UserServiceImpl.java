@@ -11,6 +11,7 @@ import com.apiexample.api.domain.User;
 import com.apiexample.api.domain.dto.UserDTO;
 import com.apiexample.api.repositories.UserRepository;
 import com.apiexample.api.services.UserService;
+import com.apiexample.api.services.exceptions.DataIntegrityViolationException;
 import com.apiexample.api.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -35,7 +36,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDTO obj) {
+        findByEmail(obj);
         return repository.save(mapper.map(obj, User.class));
+    }
+
+    private void findByEmail(UserDTO obj) {
+        Optional<User> user = repository.findByEmail(obj.getEmail());
+
+        if (user.isPresent()) {
+            throw new DataIntegrityViolationException("E-mail já cadastrado!");
+        }
     }
 
 }
