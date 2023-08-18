@@ -127,8 +127,27 @@ public class UserServiceImplTest {
         Assertions.assertEquals(PASSWORD, response.getPassword());
     }
 
+    /*
+     * @Test
+     * void whenUpdateThenReturnDataIntegrityViolationException() {
+     * Mockito.when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+     * 
+     * try {
+     * optionalUser.get().setId(2);
+     * service.create(userDTO);
+     * } catch (Exception e) {
+     * Assertions.assertEquals(DataIntegrityViolationException.class, e.getClass());
+     * }
+     * 
+     * }
+     */
+
     @Test
-    void delete() {
+    void deleteUserWithSuccess() {
+        Mockito.when(repository.findById(Mockito.anyInt())).thenReturn(optionalUser);
+        Mockito.doNothing().when(repository).deleteById(Mockito.anyInt());
+        service.delete(ID);
+        Mockito.verify(repository, Mockito.times(1)).deleteById(ID);
     }
 
     private void startUser() {
