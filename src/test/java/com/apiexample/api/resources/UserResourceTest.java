@@ -60,7 +60,7 @@ public class UserResourceTest {
     }
 
     @Test
-    void whenFindAllTheReturnAListOfUserDTO() {
+    void whenFindAllThenReturnAListOfUserDTO() {
         Mockito.when(service.findAll()).thenReturn(List.of(user));
         Mockito.when(mapper.map(Mockito.any(), Mockito.any())).thenReturn(userDTO);
 
@@ -76,6 +76,17 @@ public class UserResourceTest {
         Assertions.assertEquals(NAME, response.getBody().get(0).getName());
         Assertions.assertEquals(EMAIL, response.getBody().get(0).getEmail());
         Assertions.assertEquals(PASSWORD, response.getBody().get(0).getPassword());
+    }
+
+    @Test
+    void whenCreateReturnCreated() {
+        Mockito.when(service.create(Mockito.any())).thenReturn(user);
+
+        ResponseEntity<UserDTO> response = userResource.create(userDTO);
+
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        Assertions.assertNotNull(response.getHeaders().get("Location"));
     }
 
     private void startUser() {
